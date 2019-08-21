@@ -75,7 +75,7 @@ export default {
   data () {
     return {
       open: false,
-      date: this.value ? dayjs(this.value).toDate() : new Date()
+      date: this.value && dayjs(this.value).toDate()
     };
   },
   methods: {
@@ -130,7 +130,8 @@ export default {
       return obj;
     },
     createTextField (h) {
-      const dateStr = this.value ? dayjs(this.value).format(this.format ? this.format : DEFAULT_FORMAT[this.type]) : '';
+      const date = this.value || this.date;
+      const dateStr = date ? dayjs(date).format(this.format ? this.format : DEFAULT_FORMAT[this.type]) : '';
       const listeners = {
         ...this.$listeners,
         keydown: (e) => {
@@ -194,6 +195,8 @@ export default {
       ]);
     },
     createPicker (h) {
+      const date = this.date || new Date();
+
       switch (this.type) {
         case 'date':
         case 'year':
@@ -203,7 +206,7 @@ export default {
               ...this.generateDatePickerProps(),
               ...this.generatePickerProps(),
               type: this.type === 'month' ? 'month' : this.type === 'year' ? 'year' : 'date',
-              date: this.date
+              date
             },
             on: {
               change: this.handleDateChange
@@ -222,7 +225,7 @@ export default {
               ...this.generateTimePickerProps(),
               ...this.generatePickerProps(),
               format: this.clockType,
-              date: this.date
+              date
             },
             scopedSlots: {
               day: this.$scopedSlots.day
@@ -239,7 +242,7 @@ export default {
             props: {
               ...this.generateTimePickerProps(),
               ...this.generatePickerProps(),
-              time: this.date,
+              time: date,
               format: this.clockType
             },
             on: {
