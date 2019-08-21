@@ -69,6 +69,7 @@ export default {
     },
     value: {},
     valueFormat: String,
+    allowClear: Boolean,
     ...PickerProps
   },
   data () {
@@ -84,6 +85,10 @@ export default {
       this.$emit('input', value);
       this.$emit('change', value);
       if (this.muFormItem) this.muFormItem.onBlur();
+    },
+    clearValue () {
+      this.date = null;
+      this.$emit('input', null);
     },
     focus (e) {
       this.isFocused = true;
@@ -248,6 +253,18 @@ export default {
     }
   },
   render (h) {
+    const defaultAction = this.allowClear && this.date
+      ? h('mu-icon', {
+        staticClass: 'mu-text-field-clear',
+        props: {
+          value: 'highlight_off'
+        },
+        on: {
+          click: this.clearValue
+        }
+      })
+      : null;
+
     return this.createInput(h, {
       staticClass: 'mu-text-field',
       ref: 'content'
@@ -266,7 +283,7 @@ export default {
           click: e => { e.stopPropagation() }
         }
       }, [this.createPicker(h)])
-    ]);
+    ], defaultAction);
   },
   beforeDestroy () {
     this.closePicker();

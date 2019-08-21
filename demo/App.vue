@@ -21,6 +21,9 @@
   <mu-button @click="handelFocusTextField">
     FOCUS
   </mu-button>
+
+  <br/>
+  <mu-date-input allowClear/>
 </div>
 </template>
 <script>
