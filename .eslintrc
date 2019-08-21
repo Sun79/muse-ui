@@ -24,7 +24,7 @@
   },
   rules: {
     quotes: [2, "single", { "allowTemplateLiterals": true }],
-    linebreak-style: [2, "unix"],
+    // linebreak-style: [2, "unix"],
     semi: [2, "always"],
     eqeqeq: [2, "always"],
     strict: [2, "global"],
