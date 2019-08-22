@@ -6,4 +6,14 @@
   left: 0;
   right: 0;
   bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  &.mu-bottom-sheet--inset {
+    max-width: 70%;
+
+    @media screen and (max-width: 599px) {
+      max-width: none;
+    }
+  }
 }

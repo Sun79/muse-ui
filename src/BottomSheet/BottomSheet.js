@@ -8,12 +8,16 @@ export default {
     lockScroll: {
       type: Boolean,
       default: true
-    }
+    },
+    inset: Boolean
   },
   render (h) {
     return h(BottomSheetTransition, [
       this.open ? h('div', {
         staticClass: 'mu-bottom-sheet',
+        class: {
+          'mu-bottom-sheet--inset': this.inset
+        },
         style: {
           'z-index': this.zIndex
         }
