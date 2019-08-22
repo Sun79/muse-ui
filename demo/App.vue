@@ -24,6 +24,16 @@
 
   <br/>
   <mu-date-input allowClear/>
+
+  <!-- <mu-bottom-sheet open inset>
+    <div style="height: 100px;background: #fff;"></div>
+  </mu-bottom-sheet> -->
+  <br/>
+  <mu-tooltip content="我是测试">
+    <mu-button v-if="show" @click="show = false">
+      测试
+    </mu-button>
+  </mu-tooltip>
 </div>
 </template>
 <script>
@@ -158,7 +168,8 @@ export default {
         name: "xxx1",
         order: "asc"
       },
-      loading: true
+      loading: true,
+      show: true
     };
   },
   created() {

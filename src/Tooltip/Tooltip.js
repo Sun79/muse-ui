@@ -16,6 +16,14 @@ export default {
       trigger: null
     };
   },
+  watch: {
+    active (val) {
+      this.$emit('update:open', val);
+    },
+    open (val) {
+      this.active = val;
+    }
+  },
   beforeCreate () {
     if (this.$isServer) return;
 
@@ -28,6 +36,9 @@ export default {
   },
   mounted () {
     this.trigger = this.$el;
+  },
+  beforeDestroy () {
+    this.tooltipVM && this.tooltipVM.$destroy();
   },
   methods: {
     addEventHandle (old, fn) {
@@ -50,14 +61,6 @@ export default {
       }, 200);
     }
   },
-  watch: {
-    active (val) {
-      this.$emit('update:open', val);
-    },
-    open (val) {
-      this.active = val;
-    }
-  },
   render (h) {
     const content = (this.$slots.content && this.$slots.content.length > 0 ? this.$slots.content : this.content) || '';
     if (this.tooltipVM) {
@@ -76,7 +79,10 @@ export default {
     }
 
     const vnode = getFirstComponentChild(this.$slots.default);
-    if (!vnode) return vnode;
+    if (!vnode) {
+      this.active = false;
+      return vnode;
+    }
     vnode.data = vnode.data || {};
     const on = vnode.data.on = vnode.data.on || {};
     const nativeOn = vnode.data.nativeOn = vnode.data.nativeOn || {};
