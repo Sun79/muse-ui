@@ -105,7 +105,13 @@ export default {
             tabindex: 0,
             readonly: !enable,
             disabled: this.disabled,
-            placeholder: !this.value && this.value !== 0 ? this.placeholder : ''
+            placeholder: (
+              Array.isArray(this.value)
+                ? this.value.length === 0
+                : !this.value && this.value !== 0
+            )
+              ? this.placeholder
+              : ''
           },
           domProps: {
             value: this.searchValue
