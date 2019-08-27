@@ -193,7 +193,7 @@ export default {
         'Texas', 'Utah', 'Vermont', 'Virgin Island', 'Virginia',
         'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
       ],
-      value2: []
+      value2: ''
     };
   },
   created() {

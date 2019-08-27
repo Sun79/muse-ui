@@ -107,7 +107,7 @@ export default {
     isOptionSelected (value) {
       return value === this.value || (
         this.multiple &&
-        this.value &&
+        !!this.value &&
         this.value.indexOf(value) !== -1
       );
     },
