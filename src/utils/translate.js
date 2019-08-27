@@ -63,18 +63,16 @@ var translateElement = function (element, x, y) {
 
   cancelTranslateElement(element);
 
-  if (translate3d) {
-    element.style[transformProperty] += ' translate(' + (x ? x + 'px' : '0px') + ',' + (y ? y + 'px' : '0px') + ') translateZ(0px)';
-  } else {
-    element.style[transformProperty] += ' translate(' + (x ? x + 'px' : '0px') + ',' + (y ? y + 'px' : '0px') + ')';
-  }
+  element.style[transformProperty] += translate3d
+    ? ' translate(' + (x ? x + 'px' : '0px') + ',' + (y ? y + 'px' : '0px') + ') translateZ(0px)'
+    : ' translate(' + (x ? x + 'px' : '0px') + ',' + (y ? y + 'px' : '0px') + ')';
 };
 
 var cancelTranslateElement = function (element) {
   if (element === null || element.style === null) return;
   var transformValue = element.style[transformProperty];
   if (transformValue) {
-    transformValue = transformValue.replace(/translate\(\s*(-?\d+(\.?\d+?)?)px,\s*(-?\d+(\.\d+)?)px\)\s*translateZ\(0px\)/g, '');
+    transformValue = transformValue.replace(/translate\(\s*(-?\d+(\.?\d+?)?)px(,\s*(-?\d+(\.\d+)?)px)?\)\s*translateZ\(0px\)/g, '');
     element.style[transformProperty] = transformValue;
   }
 };

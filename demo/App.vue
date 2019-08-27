@@ -38,11 +38,14 @@
   <mu-select label="Multi Select" multiple v-model="value2" full-width placeholder="测试placeholder">
     <mu-option v-for="city in citys" :key="city" :label="city" :value="city"></mu-option>
   </mu-select>
+  <br>
+  <bug-tabs/>
 </div>
 </template>
 <script>
 import BugPopup from "./bug-popup";
 import BugDateInput from "./bug-date-input";
+import BugTabs from './bug-tabs'
 export default {
   data() {
     return {
@@ -210,7 +213,8 @@ export default {
   },
   components: {
     BugPopup,
-    BugDateInput
+    BugDateInput,
+    BugTabs
   }
 };
 </script>
