@@ -7,7 +7,7 @@ function createTransition (name, mode) {
     functional: true,
     render (h, context) {
       context.data = context.data || {};
-      context.data.props = { name };
+      context.data.props = { name, appear: true };
       context.data.on = context.data.on || {};
       if (!Object.isExtensible(context.data.on)) {
         context.data.on = { ...context.data.on };
