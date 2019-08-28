@@ -2,7 +2,7 @@
 
 exports[`Bottom Sheet should default view 1`] = `
 
-<div class="mu-bottom-sheet"
+<div class="mu-bottom-sheet mu-bottom-sheet-transition-enter mu-bottom-sheet-transition-enter-active"
      style="z-index: 20141224;"
 >
 </div>
