@@ -4,7 +4,7 @@ import App from './App';
 Vue.use(MuseUI);
 
 const app = new Vue({
-  ...App
+  render: h => h(App)
 });
 
 app.$mount('#app');

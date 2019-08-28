@@ -1,250 +1,26 @@
 <template>
 <div style="padding: 32px;">
-  <mu-date-input type="dateTime">
-    <template slot="day" slot-scope="{ selected, date, disabled, now}">
-      <div class="mu-day-button-bg"></div>
-      <div class="mu-day-button-content">
-        <span class="mu-day-button-text">{{date.getDate()}}日</span>
-        <span class="day-dot" v-if="date.getDate() % 3 === 0"></span>
-      </div>
-    </template>
-  </mu-date-input>
 
-  <br/>
-  <mu-button @click="handleClick">
-    CLICK
-  </mu-button>
-  <bug-popup />
-
-
-  <mu-text-field ref="textField" v-model="value1" multi-line :rows="4" icon="comment"  placeholder="输入信息"/>
-  <mu-button @click="handelFocusTextField">
-    FOCUS
-  </mu-button>
-
-  <br/>
-  <mu-date-input allowClear/>
-
-  <!-- <mu-bottom-sheet open inset>
-    <div style="height: 100px;background: #fff;"></div>
-  </mu-bottom-sheet> -->
-  <br/>
-  <mu-tooltip content="我是测试">
-    <mu-button v-if="show" @click="show = false">
-      测试
-    </mu-button>
-  </mu-tooltip>
-  <br>
-  <mu-select label="Multi Select" multiple v-model="value2" full-width placeholder="测试placeholder">
-    <mu-option v-for="city in citys" :key="city" :label="city" :value="city"></mu-option>
-  </mu-select>
-  <br>
-  <bug-tabs/>
 </div>
 </template>
 <script>
-import BugPopup from "./bug-popup";
-import BugDateInput from "./bug-date-input";
-import BugTabs from './bug-tabs'
 export default {
+  components: {
+
+  },
   data() {
     return {
-      page: 3,
-      open: false,
-      alert: true,
-      checkbox1: [],
-      selects: [],
-      slider: 10,
-      checkbox2: true,
-      switch1: true,
-      radio1: "",
-      ripple: "click ripple",
-      date: new Date(),
-      time: new Date(),
-      value: undefined,
-      value1:
-        "I farI fare well without computere well without I fare well without computercomputerI fare well without computer.\r\n没电脑我也过得很好。\r\nHow did you fare?\r\n你过得怎样?\r\nA single fare is 170 dollars.\r\n单程票价为170美元。",
-      alertMsg: "every thing is disabled",
-      columns: [
-        {
-          name: "xxx1",
-          title: "嘻嘻嘻1",
-          width: 300,
-          sortable: true
-        },
-        {
-          name: "xxx2",
-          title: "嘻嘻嘻2",
-          align: "center",
-          width: 300,
-          sortable: true
-        },
-        {
-          name: "xxx3",
-          title: "嘻嘻嘻3",
-          width: 300,
-          sortable: true
-        },
-        {
-          name: "xxx4",
-          title: "嘻嘻嘻4",
-          width: 300,
-          sortable: true
-        },
-        {
-          name: "xxx5",
-          title: "嘻嘻嘻5",
-          width: 300,
-          sortable: true
-        },
-        {
-          name: "xxx6",
-          title: "嘻嘻嘻6",
-          width: 300,
-          sortable: true
-        }
-      ],
-      list: [
-        {
-          xxx1: "啊哈哈哈哈哈哈",
-          xxx2: 10,
-          xxx3: 11,
-          xxx4: 12,
-          xxx5: 24,
-          xxx6: 26
-        },
-        {
-          xxx1: "啊哈哈哈哈哈哈",
-          xxx2: 10,
-          xxx3: 11,
-          xxx4: 12,
-          xxx5: 24,
-          xxx6: 26
-        },
-        {
-          xxx1: "啊哈哈哈哈哈哈",
-          xxx2: 10,
-          xxx3: 11,
-          xxx4: 12,
-          xxx5: 24,
-          xxx6: 26
-        },
-        {
-          xxx1: "啊哈哈哈哈哈哈",
-          xxx2: 10,
-          xxx3: 11,
-          xxx4: 12,
-          xxx5: 24,
-          xxx6: 26
-        },
-        {
-          xxx1: "啊哈哈哈哈哈哈",
-          xxx2: 10,
-          xxx3: 11,
-          xxx4: 12,
-          xxx5: 24,
-          xxx6: 26
-        },
-        {
-          xxx1: "啊哈哈哈哈哈哈",
-          xxx2: 10,
-          xxx3: 11,
-          xxx4: 12,
-          xxx5: 24,
-          xxx6: 26
-        },
-        {
-          xxx1: "啊哈哈哈哈哈哈",
-          xxx2: 10,
-          xxx3: 11,
-          xxx4: 12,
-          xxx5: 24,
-          xxx6: 26
-        },
-        {
-          xxx1: "啊哈哈哈哈哈哈",
-          xxx2: 10,
-          xxx3: 11,
-          xxx4: 12,
-          xxx5: 24,
-          xxx6: 26
-        }
-      ],
-      selects: [],
-      sort: {
-        name: "xxx1",
-        order: "asc"
-      },
-      loading: true,
-      show: true,
-      citys: [
-        'Alabama', 'Alaska', 'American Samoa', 'Arizona',
-        'Arkansas', 'California', 'Colorado', 'Connecticut',
-        'Delaware', 'District of Columbia', 'Federated States of Micronesia',
-        'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho',
-        'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
-        'Louisiana', 'Maine', 'Marshall Islands', 'Maryland',
-        'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
-        'Missouri', 'Montana', 'Nebraska', 'Nevada',
-        'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
-        'North Carolina', 'North Dakota', 'Northern Mariana Islands', 'Ohio',
-        'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico',
-        'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee',
-        'Texas', 'Utah', 'Vermont', 'Virgin Island', 'Virginia',
-        'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-      ],
-      value2: ''
+
     };
   },
   created() {
-    setTimeout(() => (this.loading = false), 2000);
+
   },
   methods: {
-    handleClick() {
-      console.log("click");
-    },
-    closeAlert() {
-      this.alert = false;
-    },
-    handelFocusTextField() {
-      // console.log(this.$refs.textField);
-      this.$refs.textField.focus();
-    }
-  },
-  components: {
-    BugPopup,
-    BugDateInput,
-    BugTabs
+
   }
 };
 </script>
 <style>
-.demo-ripple {
-  width: 300px;
-  height: 300px;
-  background-color: aqua;
-  position: relative;
-}
-.mu-day-button-content {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-.day-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 100%;
-  background-color: #009688;
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  margin-left: -4px;
-}
+
 </style>
