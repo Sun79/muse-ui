@@ -53,7 +53,13 @@ export default {
       return this.itemHeight * this.visibleItemCount;
     },
     valueIndex () {
-      return this.values.indexOf(this.value);
+      const { value } = this;
+
+      return this.values.findIndex(item => (
+        typeof item === 'object'
+          ? item.value
+          : item
+      ) === value);
     },
     dragRange () {
       const values = this.values;
@@ -67,9 +73,8 @@ export default {
     }
   },
   methods: {
-    value2Translate (value) {
-      const values = this.values;
-      const valueIndex = values.indexOf(value);
+    value2Translate () {
+      const { valueIndex } = this;
       const offset = Math.floor(this.visibleItemCount / 2);
       if (valueIndex !== -1) {
         return (valueIndex - offset) * -this.itemHeight;
@@ -81,9 +86,8 @@ export default {
       return this.values[index];
     },
     doOnValueChange () {
-      const value = this.value;
       const wrapper = this.$refs.wrapper;
-      translateUtil.translateElement(wrapper, null, this.value2Translate(value));
+      translateUtil.translateElement(wrapper, null, this.value2Translate());
     },
     doOnValuesChange () {
       const el = this.$el;
@@ -169,7 +173,7 @@ export default {
               'text-align': this.textAlign
             },
             class: {
-              selected: item === this.value
+              selected: this.valueIndex === index
             },
             key: 'pick-slot-' + index
           }, item.text || item);
@@ -179,7 +183,12 @@ export default {
   watch: {
     values (newVal) {
       if (this.valueIndex === -1) {
-        this.value = (newVal || [])[0];
+        const item = (newVal || [])[0];
+
+        // FIXME:不应直接更改props
+        this.value = typeof item === 'object'
+          ? item.value
+          : item;
       }
     },
     value () {
