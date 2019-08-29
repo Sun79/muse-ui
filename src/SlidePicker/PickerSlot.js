@@ -45,7 +45,8 @@ export default {
       animate: false,
       startTop: 0,
       velocityTranslate: 0,
-      prevTranslate: 0
+      prevTranslate: 0,
+      moving: false
     };
   },
   computed: {
@@ -66,6 +67,18 @@ export default {
       return [-this.itemHeight * (values.length - Math.ceil(visibleItemCount / 2)), this.itemHeight * Math.floor(visibleItemCount / 2)];
     }
   },
+  watch: {
+    values (newVal) {
+      if (this.valueIndex === -1) {
+        const item = (newVal || [])[0];
+
+        this.updateValue(item);
+      }
+    },
+    value () {
+      this.doOnValueChange();
+    }
+  },
   mounted () {
     if (!this.divider) {
       this.doOnValueChange();
@@ -78,7 +91,7 @@ export default {
 
       if (valueIndex === -1) {
         valueIndex = 0;
-        this.$emit('update:value', this.getValueByItem(this.values[0]));
+        this.updateValue(this.values[0]);
       }
       return (valueIndex - offset) * -this.itemHeight;
     },
@@ -102,6 +115,7 @@ export default {
       this.startTop = translateUtil.getElementTranslate(this.$refs.wrapper).top;
     },
     handleMove (pos, drag, event) {
+      this.moving = true;
       const el = this.$refs.wrapper;
       const translate = this.startTop + pos.y;
       translateUtil.translateElement(el, 0, translate);
@@ -119,6 +133,7 @@ export default {
       const dragRange = this.dragRange;
       this.animate = true;
       transitionEnd(el, () => {
+        this.moving = false;
         this.animate = false;
       });
       this.$nextTick(() => {
@@ -133,14 +148,20 @@ export default {
 
         const item = this.translate2Value(translate);
 
-        this.$emit('update:value', this.getValueByItem(item));
-        this.$emit('change', item);
+        this.updateValue(item);
       });
     },
     getValueByItem (item) {
       return typeof item === 'object'
         ? item.value
         : item;
+    },
+    updateValue (item) {
+      const value = this.getValueByItem(item);
+
+      if (value === this.value) return;
+      this.$emit('update:value', value);
+      this.$emit('change', item);
     }
   },
   render (h) {
@@ -186,21 +207,14 @@ export default {
             class: {
               selected: this.valueIndex === index
             },
-            key: 'pick-slot-' + index
+            key: 'pick-slot-' + index,
+            on: {
+              click: () => {
+                this.moving || this.updateValue(item);
+              }
+            }
           }, item.text || item);
         }))
     ]);
-  },
-  watch: {
-    values (newVal) {
-      if (this.valueIndex === -1) {
-        const item = (newVal || [])[0];
-
-        this.$emit('update:value', this.getValueByItem(item));
-      }
-    },
-    value () {
-      this.doOnValueChange();
-    }
   }
 };
