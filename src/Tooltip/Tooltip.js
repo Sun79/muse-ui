@@ -8,7 +8,11 @@ export default {
     content: String,
     placement: TooltipContent.props.placement,
     open: Boolean,
-    tooltipClass: [String, Object, Array]
+    tooltipClass: [String, Object, Array],
+    space: {
+      type: Number,
+      default: 8
+    }
   },
   data () {
     return {
@@ -69,7 +73,8 @@ export default {
         props: {
           placement: this.placement,
           open: this.active,
-          trigger: this.trigger
+          trigger: this.trigger,
+          space: this.space
         },
         nativeOn: {
           mouseenter: () => this.show(),

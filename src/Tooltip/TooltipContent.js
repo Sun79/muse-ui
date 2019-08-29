@@ -2,7 +2,6 @@ import popup from '../internal/mixins/popup';
 import resize from '../internal/directives/resize';
 import scroll from '../internal/directives/scroll';
 
-const SPACE = 8;
 export default {
   name: 'mu-tooltip-content',
   mixins: [popup],
@@ -29,7 +28,8 @@ export default {
         ].indexOf(val) !== -1;
       }
     },
-    trigger: {}
+    trigger: {},
+    space: Number
   },
   mounted () {
     this.setStyle();
@@ -43,11 +43,11 @@ export default {
         case 'left':
         case 'left-start':
         case 'left-end':
-          return react.left - width - SPACE;
+          return react.left - width - this.space;
         case 'right':
         case 'right-start':
         case 'right-end':
-          return react.left + react.width + SPACE;
+          return react.left + react.width + this.space;
         case 'top':
         case 'bottom':
           return react.left + react.width / 2 - width / 2;
@@ -64,11 +64,11 @@ export default {
         case 'top':
         case 'top-start':
         case 'top-end':
-          return react.top - height - SPACE;
+          return react.top - height - this.space;
         case 'bottom':
         case 'bottom-start':
         case 'bottom-end':
-          return react.top + react.height + SPACE;
+          return react.top + react.height + this.space;
         case 'left':
         case 'right':
           return react.top + react.height / 2 - height / 2;
