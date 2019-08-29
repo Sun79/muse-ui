@@ -53,13 +53,12 @@ export default {
       return this.itemHeight * this.visibleItemCount;
     },
     valueIndex () {
-      const { value } = this;
+      const {
+        value,
+        getValueByItem
+      } = this;
 
-      return this.values.findIndex(item => (
-        typeof item === 'object'
-          ? item.value
-          : item
-      ) === value);
+      return this.values.findIndex(item => getValueByItem(item) === value);
     },
     dragRange () {
       const values = this.values;
@@ -128,8 +127,17 @@ export default {
         }
         translate = Math.max(Math.min(translate, dragRange[1]), dragRange[0]);
         translateUtil.translateElement(el, null, translate);
-        this.$emit('change', this.translate2Value(translate));
+
+        const item = this.translate2Value(translate);
+
+        this.$emit('update:value', this.getValueByItem(item));
+        this.$emit('change', item);
       });
+    },
+    getValueByItem (item) {
+      return typeof item === 'object'
+        ? item.value
+        : item;
     }
   },
   render (h) {
@@ -185,10 +193,7 @@ export default {
       if (this.valueIndex === -1) {
         const item = (newVal || [])[0];
 
-        // FIXME:不应直接更改props
-        this.value = typeof item === 'object'
-          ? item.value
-          : item;
+        this.$emit('update:value', this.getValueByItem(item));
       }
     },
     value () {

@@ -2,6 +2,9 @@ import PickerSlot from './PickerSlot';
 
 export default {
   name: 'mu-slide-picker',
+  model: {
+    prop: 'values'
+  },
   props: {
     visibleItemCount: {
       type: Number,
@@ -44,6 +47,12 @@ export default {
           on: {
             change: (value) => {
               this.change(index, value);
+            },
+            'update:value': value => {
+              const values = [...this.values];
+              values[index] = value;
+
+              this.$emit('input', values);
             }
           }
         });
