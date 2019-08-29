@@ -73,11 +73,14 @@ export default {
   },
   methods: {
     value2Translate () {
-      const { valueIndex } = this;
+      let { valueIndex } = this;
       const offset = Math.floor(this.visibleItemCount / 2);
-      if (valueIndex !== -1) {
-        return (valueIndex - offset) * -this.itemHeight;
+
+      if (valueIndex === -1) {
+        valueIndex = 0;
+        this.$emit('update:value', this.getValueByItem(this.values[0]));
       }
+      return (valueIndex - offset) * -this.itemHeight;
     },
     translate2Value (translate) {
       translate = Math.round(translate / this.itemHeight) * this.itemHeight;
