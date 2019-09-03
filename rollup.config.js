@@ -6,7 +6,8 @@ import postcss from 'rollup-plugin-postcss';
 import replace from 'rollup-plugin-replace';
 import packageJson from './package.json';
 
-const { name, version } = packageJson;
+const { version } = packageJson;
+const name = 'muse-ui';
 const banner = `/* ${name} myron.liu version ${version} */`;
 const plugins = [
   postcss({ extensions: ['.less'], extract: `dist/${name}.css` }),
