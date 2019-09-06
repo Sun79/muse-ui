@@ -8,7 +8,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Button from '../Button/Button';
 import keycode from 'keycode';
 
-dayjs.extend(customParseFormat)
+dayjs.extend(customParseFormat);
 
 const DEFAULT_FORMAT = {
   date: 'YYYY-MM-DD',
