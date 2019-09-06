@@ -4,8 +4,11 @@ import { DatePicker, TimePicker, DateTimePicker } from '../Picker';
 import PickerMixin from '../Picker/mixins/props';
 import Container from './Container';
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Button from '../Button/Button';
 import keycode from 'keycode';
+
+dayjs.extend(customParseFormat)
 
 const DEFAULT_FORMAT = {
   date: 'YYYY-MM-DD',
@@ -131,7 +134,13 @@ export default {
     },
     createTextField (h) {
       const date = this.value || this.date;
-      const dateStr = date ? dayjs(date).format(this.format ? this.format : DEFAULT_FORMAT[this.type]) : '';
+      const dateStr = date
+        ? (
+          typeof date === 'string'
+            ? dayjs(date, this.valueFormat)
+            : dayjs(date)
+        ).format(this.format ? this.format : DEFAULT_FORMAT[this.type])
+        : '';
       const listeners = {
         ...this.$listeners,
         keydown: (e) => {
@@ -293,7 +302,13 @@ export default {
   },
   watch: {
     value (val) {
-      this.date = val ? dayjs(val).toDate() : undefined;
+      this.date = val
+        ? (
+          this.valueFormat
+            ? dayjs(val, this.valueFormat)
+            : dayjs(val)
+        ).toDate()
+        : undefined;
     }
   }
 };
