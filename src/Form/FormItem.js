@@ -40,18 +40,27 @@ export default {
   },
   methods: {
     validate () {
-      if (!this.rules || this.rules.length === 0) return true;
+      if (!this.rules || this.rules.length === 0) return null;
       const promises = [];
       const promiseMessages = [];
       for (let i = 0; i < this.rules.length; i++) {
         const rule = this.rules[i];
-        const result = rule.validate(this.muForm.getValue(this.prop), this.muForm.model);
+        const result = rule.validate(this.muForm.model[this.prop], this.muForm.model);
         if (isPromise(result)) {
           promises.push(result);
           promiseMessages.push(rule.message);
           continue;
         }
-        if (!this.validateResult(result, rule.message)) return false;
+        if (!this.validateResult(result, rule.message)) {
+          return ({
+            errors: [
+              {
+                message: rule.message,
+                field: this.prop
+              }
+            ]
+          });
+        }
       }
 
       // promise 处理
@@ -59,15 +68,24 @@ export default {
         return Promise.all(promises).then((results) => {
           for (let i = 0; i < results.length; i++) {
             const valid = this.validateResult(results[i], promiseMessages[i]);
-            if (!valid) return Promise.reject(false);
+            if (!valid) {
+              return Promise.resolve({
+                errors: [
+                  {
+                    message: promiseMessages[i],
+                    field: this.prop
+                  }
+                ]
+              });
+            }
           }
           this.errorMessage = '';
-          return true;
+          return null;
         });
       }
 
       this.errorMessage = '';
-      return true;
+      return null;
     },
     validateResult (result, message) {
       switch (true) {

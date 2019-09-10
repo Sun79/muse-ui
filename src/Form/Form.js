@@ -1,4 +1,4 @@
-import { isPromise, getObjAttr } from '../utils';
+import { isPromise } from '../utils';
 export default {
   name: 'mu-form',
   provide () {
@@ -31,9 +31,6 @@ export default {
     };
   },
   methods: {
-    getValue (prop) {
-      return getObjAttr(this.model, prop);
-    },
     addItem (item) {
       this.items.push(item);
     },
@@ -45,6 +42,7 @@ export default {
     validate () {
       let valid = true;
       const promises = [];
+      const errors = {};
       for (let i = 0; i < this.items.length; i++) {
         const item = this.items[i];
         const result = item.validate();
@@ -52,20 +50,24 @@ export default {
           promises.push(result);
           continue;
         }
-        if (!result) {
+        if (result) {
           valid = false;
+          errors[item.prop] = result;
         }
       }
       if (promises.length > 0 && typeof Promise !== 'undefined') {
-        return Promise.all([
-          valid ? Promise.resolve(valid) : Promise.reject(valid),
-          ...promises
-        ]).then(
-          () => true,
-          () => false
-        );
+        return Promise.all(promises)
+          .then(results => {
+            results.forEach((result, index) => {
+              if (result) {
+                valid = false;
+                errors[this.items[index].prop] = result;
+              }
+            });
+            return valid ? null : errors;
+          });
       }
-      return typeof Promise !== 'undefined' ? Promise.resolve(valid) : valid;
+      return Promise.resolve(valid ? null : errors);
     },
     clear () {
       this.items.forEach((item) => (item.errorMessage = ''));
