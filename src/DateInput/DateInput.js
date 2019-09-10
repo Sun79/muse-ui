@@ -265,7 +265,7 @@ export default {
     }
   },
   render (h) {
-    const defaultAction = this.allowClear && this.date
+    const defaultAction = !this.disabled && this.allowClear && this.date
       ? h('mu-icon', {
         staticClass: 'mu-text-field-clear',
         props: {
