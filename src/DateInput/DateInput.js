@@ -78,7 +78,9 @@ export default {
   data () {
     return {
       open: false,
-      date: this.value && dayjs(this.value).toDate()
+      date: this.value
+        ? dayjs(this.value).toDate()
+        : new Date()
     };
   },
   methods: {
@@ -133,12 +135,11 @@ export default {
       return obj;
     },
     createTextField (h) {
-      const date = this.value || this.date;
-      const dateStr = date
+      const dateStr = this.value
         ? (
           typeof date === 'string'
-            ? dayjs(date, this.valueFormat)
-            : dayjs(date)
+            ? dayjs(this.value, this.valueFormat)
+            : dayjs(this.value)
         ).format(this.format ? this.format : DEFAULT_FORMAT[this.type])
         : '';
       const listeners = {
@@ -204,8 +205,6 @@ export default {
       ]);
     },
     createPicker (h) {
-      const date = this.date || new Date();
-
       switch (this.type) {
         case 'date':
         case 'year':
@@ -215,7 +214,7 @@ export default {
               ...this.generateDatePickerProps(),
               ...this.generatePickerProps(),
               type: this.type === 'month' ? 'month' : this.type === 'year' ? 'year' : 'date',
-              date
+              date: this.date
             },
             on: {
               change: this.handleDateChange
@@ -234,7 +233,7 @@ export default {
               ...this.generateTimePickerProps(),
               ...this.generatePickerProps(),
               format: this.clockType,
-              date
+              date: this.date
             },
             scopedSlots: {
               day: this.$scopedSlots.day
@@ -251,7 +250,7 @@ export default {
             props: {
               ...this.generateTimePickerProps(),
               ...this.generatePickerProps(),
-              time: date,
+              time: this.date,
               format: this.clockType
             },
             on: {
@@ -265,7 +264,9 @@ export default {
     }
   },
   render (h) {
-    const defaultAction = !this.disabled && this.allowClear && this.date
+    const defaultAction = !this.disabled
+      && this.allowClear
+      && this.value
       ? h('mu-icon', {
         staticClass: 'mu-text-field-clear',
         props: {
