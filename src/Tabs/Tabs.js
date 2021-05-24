@@ -2,6 +2,7 @@ import { isNotNull } from '../utils';
 import resize from '../internal/directives/resize';
 import color from '../internal/mixins/color';
 import translateUtils from '../utils/translate';
+import { transitionEnd } from '../utils/dom';
 
 export default {
   name: 'mu-tabs',
@@ -91,6 +92,18 @@ export default {
           lineEl.style.transition = '';
         }, 0);
       }
+    },
+    handleWindowResize () {
+      if (!this.tabs.length) return;
+      const { $el: el } = this.tabs[0];
+      // 防止重复添加transitionend事件监听器
+      if (el.__hasTransitionEndListener__) return;
+      el.__hasTransitionEndListener__ = true;
+      // transition结束后再调整位置
+      transitionEnd(el, () => {
+        delete el.__hasTransitionEndListener__;
+        this.setTabHighLineStyle();
+      });
     }
   },
   watch: {
@@ -118,7 +131,7 @@ export default {
       directives: [{
         name: 'resize',
         value: {
-          value: this.setTabHighLineStyle,
+          value: this.handleWindowResize,
           quiet: true
         }
       }]
