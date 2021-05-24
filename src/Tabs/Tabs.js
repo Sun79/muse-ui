@@ -35,7 +35,7 @@ export default {
     this.tabIndex = 0;
   },
   mounted () {
-    this.setTabHighLineStyle();
+    this.setTabHighLineStyle(true);
   },
   updated () {
     this.setTabHighLineStyle();
@@ -75,15 +75,22 @@ export default {
     getActiveTab () {
       return this.tabs.filter((tab) => tab.active)[0];
     },
-    setTabHighLineStyle () {
+    setTabHighLineStyle (disabledTransition = false) {
       const activeTab = this.getActiveTab();
       if (!activeTab || !this.$refs.line || !activeTab.$el) return;
       const el = activeTab.$el;
       const lineEl = this.$refs.line;
       const rect = el.getBoundingClientRect();
       const tabsRect = this.$el.getBoundingClientRect();
+      if (disabledTransition) lineEl.style.transition = 'none';
       lineEl.style.width = rect.width + 'px';
       translateUtils.translateElement(lineEl, rect.left - tabsRect.left, 0);
+      if (disabledTransition) {
+        // 不能使用微任务，微任务会在渲染之前执行，导致禁用transition失效
+        setTimeout(() => {
+          lineEl.style.transition = '';
+        }, 0);
+      }
     }
   },
   watch: {
@@ -110,7 +117,10 @@ export default {
       },
       directives: [{
         name: 'resize',
-        value: this.setTabHighLineStyle
+        value: {
+          value: this.setTabHighLineStyle,
+          quiet: true
+        }
       }]
     }, [
       this.$slots.default,
